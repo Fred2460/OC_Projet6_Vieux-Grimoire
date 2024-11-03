@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-require('dotenv').config()
+//require('dotenv').config()
 
 const app = express();
 
+// ****************** changer l'accès à la base mongoDB Atlas *******************
 mongoose.connect('mongodb+srv://fredweb24:Ukqni2s2ec4pPJl9@go-fullstack.q9cre.mongodb.net/test?retryWrites=true&w=majority',
     //{ useNewUrlParser: true,
     //  useUnifiedTopology: true }
