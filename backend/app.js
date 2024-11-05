@@ -5,8 +5,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// ****************** changer l'accès à la base mongoDB Atlas *******************
-mongoose.connect('mongodb+srv://fredweb24:Ukqni2s2ec4pPJl9@go-fullstack.q9cre.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://fredweb24:Ukqni2s2ec4pPJl9@go-fullstack.q9cre.mongodb.net/vieuxGrimoire?retryWrites=true&w=majority',
     //{ useNewUrlParser: true,
     //  useUnifiedTopology: true }
     )
