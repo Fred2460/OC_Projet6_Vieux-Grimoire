@@ -23,7 +23,6 @@ exports.getOneBook = (req, res, next) => {
     .catch ((error) => { res.status(404).json({error: error}) })
 };
 
-// exports.modifyBook d'origine ********** => OK 
 
 exports.modifyBook = (req, res, next) => {
   const bookObject = req.file ? {
