@@ -77,38 +77,26 @@ exports.getAllBook = (req, res, next) => {
 };
 
 exports.rateBook = (req, res, next) => {
-  const bookObject = { ...req.body };
-  console.log('bookObject initial 125=', bookObject); // vérif
-
+  const { rating } = req.body; // récupération de la note donnée par le user connecté
   Book.findOne({ _id: req.params.id })
   .then ((book) => {
-    console.log('book initial 129=', book); // vérif
-    //if (book.userId === req.auth.userId) {
-    if (book.userId != book.userId) { // test bidon
+    if (!book) {
+      return res.status(404).json({ message: 'Livre non trouvé' });
+    }
+    if (book.userId === req.auth.userId) {
       res.status(401).json({message: 'Non autorisé'});
     } else {
-      console.log('vérif 134');
-      const oldRater = book.ratings.find(oldRater => book.ratings.userId === req.auth.userId)
-      console.log('oldRater 135=', oldRater); // vérif
-      //if (oldRater === undefined) {
-      if (1 === 1) { // test bidon
-        //const newRating = { bookObject.userId}, {bookObject.grade };
-        //const oldRatings = book.ratings;
-        let newRatings = [...book.ratings]
-        delete newRatings._id;
-        console.log('newRatings 142=', newRatings);
-
-        newRatings.push({ userId: req.auth.userId, grade: rating });
-        //book.ratings.push(bookObject.userId, bookObject.grade);
-        console.log('newRatings 145=', newRatings);
-        console.log('bookObject après 142=', bookObject); // vérif
-        console.log('book.rating après 143=', book.ratings); // vérif
-        console.log('book après 144=', book); // vérif
-        Book.updateOne({_id: req.params.id}, {ratings: newRatings})
-        //Book.save()
+      const oldRater = book.ratings.find(rating => rating.userId === req.auth.userId)
+      console.log('oldRater 97=', oldRater); // vérif
+      if (oldRater != "undefined") {
+        // Ajout de la nouvelle note
+        const newRatings = [...book.ratings, { userId: req.auth.userId, grade:rating }];
+        // Calcul de la nouvelle note moyenne
+        const newAverageRating = parseFloat((newRatings.reduce((sum, rating) => sum + rating.grade, 0) / newRatings.length).toFixed(1));
+        // Mise à jour du document book
+        Book.updateOne({ _id: req.params.id }, { ratings: newRatings, averageRating: newAverageRating })
           .then (() => { 
-            res.status(200).json({message: 'Livre noté !'}), 
-            console.log('book noté 145=', book); // vérif
+            res.status(200).json({message: 'Livre noté !'})
           })
           .catch ((error) => { res.status(400).json({error: error}) })
       } else {
