@@ -36,7 +36,6 @@ exports.modifyBook = (req, res, next) => {
         res.status(401).json({ message : 'Non autorisé'});
       } else {
         const filenameOld = book.imageUrl.split('/images/')[1];
-        console.log('filenameOld 39ctrl.book=', filenameOld); //vérif
         fs.unlink(`images/${filenameOld}`, () => {
           Book.updateOne({_id: req.params.id}, {...bookObject, _id: req.params.id})
           .then (() => { res.status(201).json({message: 'Livre modifié !'}) })
@@ -72,7 +71,9 @@ exports.deleteBook = (req, res, next) => {
 
 exports.getAllBook = (req, res, next) => {
   Book.find()
-    .then ((books) => { res.status(200).json(books) })
+    .then ((books) => { 
+      res.status(200).json(books)
+    })
     .catch ((error) => { res.status(400).json({error: error}) })
 };
 
@@ -87,7 +88,6 @@ exports.rateBook = (req, res, next) => {
       res.status(401).json({message: 'Non autorisé'});
     } else {
       const oldRater = book.ratings.find(rating => rating.userId === req.auth.userId)
-      console.log('oldRater 97=', oldRater); // vérif
       if (oldRater != "undefined") {
         // Ajout de la nouvelle note
         const newRatings = [...book.ratings, { userId: req.auth.userId, grade:rating }];
@@ -106,3 +106,15 @@ exports.rateBook = (req, res, next) => {
   })
   .catch ((error) => { res.status(404).json({error: error}) })
 }
+
+exports.getBestBook = (req, res, next) => {
+  Book.find()
+    .then ((books) => {
+      // tri les books par ordre décroissant d'averageRating et sélectionne les 3 premiers
+      const bestRatedBooks = books
+        .sort((a,b) => b.averageRating - a.averageRating)
+        .slice(0,3);
+      res.status(200).json(bestRatedBooks);
+    })
+    .catch ((error) => { res.status(400).json({error: error}) })
+};

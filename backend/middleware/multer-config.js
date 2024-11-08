@@ -37,12 +37,10 @@ const resizeImage = (req, res, next) => {
     .then(() => {    
       // Mettre à jour le chemin de fichier pour utiliser le fichier redimensionné
       req.file.path = resizedFilepath;
-      console.log('req.file.path 40multer=', req.file.path); // vérif
       req.file.filename = 'resized_' + req.file.filename;
-      console.log('req.file.filename 42multer=', req.file.filename); // vérif
-      console.log('req.file 43multer=', req.file); // vérif
 
       // Supprimez l'image originale après le redimensionnement
+      /*
       console.log('filepath 51multer=', filepath) // vérif
       setTimeout(() => {
         console.log('filepath 53multer=', filepath) // vérif
@@ -52,6 +50,7 @@ const resizeImage = (req, res, next) => {
           }
         });
       }, 200);
+      */
       next()
     })
     .catch(error => {
