@@ -36,6 +36,7 @@ exports.modifyBook = (req, res, next) => {
         res.status(401).json({ message : 'Non autorisé'});
       } else {
         const filenameOld = book.imageUrl.split('/images/')[1];
+        console.log('filenameOld 39ctrl.book=', filenameOld); //vérif
         fs.unlink(`images/${filenameOld}`, () => {
           Book.updateOne({_id: req.params.id}, {...bookObject, _id: req.params.id})
           .then (() => { res.status(201).json({message: 'Livre modifié !'}) })

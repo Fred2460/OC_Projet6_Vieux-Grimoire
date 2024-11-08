@@ -34,26 +34,26 @@ const resizeImage = (req, res, next) => {
   sharp(filepath)
     .resize({ width: 463 })
     .toFile(resizedFilepath)
-    .then(() => {
-      // Supprimez l'image originale après le redimensionnement
+    .then(() => {    
       // Mettre à jour le chemin de fichier pour utiliser le fichier redimensionné
       req.file.path = resizedFilepath;
-      console.log('req.file.path =', req.file.path);
+      console.log('req.file.path 40multer=', req.file.path); // vérif
       req.file.filename = 'resized_' + req.file.filename;
-      console.log('req.file.filename =', req.file.filename);
-      
-      const readStream = fs.createReadStream(filepath);
-      readStream.on('close', () => {
+      console.log('req.file.filename 42multer=', req.file.filename); // vérif
+      console.log('req.file 43multer=', req.file); // vérif
+
+      // Supprimez l'image originale après le redimensionnement
+      console.log('filepath 51multer=', filepath) // vérif
+      setTimeout(() => {
+        console.log('filepath 53multer=', filepath) // vérif
         fs.unlink(filepath, (error) => {
           if (error) {
             console.error('Erreur lors de la suppression de l\'image d\'origine :', error);
           }
         });
-      });
-      readStream.close();
+      }, 200);
       next()
     })
-      //req.file.resizedPath = resizedFilepath; // Optionnel, pour usage futur
     .catch(error => {
       console.error(error);
       res.status(500).json({ error: 'Erreur lors du redimensionnement de l\'image' });
