@@ -30,28 +30,26 @@ const resizeImage = (req, res, next) => {
 
   const filepath = path.join('images', req.file.filename);
   const resizedFilepath = path.join('images', 'resized_' + req.file.filename);
+  
+  sharp.cache(false); // désactivation du cache pour permettre la suppression de l'image d'origine avant resize
 
   sharp(filepath)
     .resize({ width: 463 })
     .toFile(resizedFilepath)
-    .then(() => {    
+    .then(() => {
       // Mettre à jour le chemin de fichier pour utiliser le fichier redimensionné
       req.file.path = resizedFilepath;
       req.file.filename = 'resized_' + req.file.filename;
 
-      // Supprimez l'image originale après le redimensionnement
-      /*
-      console.log('filepath 51multer=', filepath) // vérif
-      setTimeout(() => {
-        console.log('filepath 53multer=', filepath) // vérif
-        fs.unlink(filepath, (error) => {
-          if (error) {
-            console.error('Erreur lors de la suppression de l\'image d\'origine :', error);
-          }
-        });
-      }, 200);
-      */
-      next()
+      // Supprimer l'image originale après la confirmation de fermeture
+      fs.unlink(filepath, (error) => {
+        if (error) {
+          console.error('Erreur lors de la suppression de l\'image d\'origine :', error);
+        } else {
+          console.log('Image originale supprimée:', filepath);
+        }
+      });
+      next();
     })
     .catch(error => {
       console.error(error);
