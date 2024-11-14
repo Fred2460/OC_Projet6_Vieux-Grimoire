@@ -6,14 +6,14 @@ const bookRoutes = require('./routes/book');
 const path = require('path');
 
 const bodyParser = require('body-parser');
+
+require('dotenv').config()
 const mongoose = require('mongoose');
-//require('dotenv').config()
 
 const app = express();
 
-mongoose.connect('mongodb+srv://fredweb24:Ukqni2s2ec4pPJl9@go-fullstack.q9cre.mongodb.net/vieuxGrimoire?retryWrites=true&w=majority',
-    //{ useNewUrlParser: true,
-    //  useUnifiedTopology: true }
+
+mongoose.connect(process.env.DB_URI,
     )
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch((error) => console.log('Connexion à MongoDB échouée :', error));
